@@ -16,23 +16,12 @@ namespace SerialMonitor
         public SeriesCollection SeriesCollection { get; set; }
         SerialPort serialPort = new SerialPort();
 
-        private int count = 0;
-        private string testData;
-        public string TestData
-        {
-            get => testData;
-            set => SetProperty(ref testData, value);
-        }
-
-        private string receiveData;
-
+        private string receiveData="";
         public string ReceiveData
         {
             get => receiveData;
             set => SetProperty(ref receiveData, value);
         }
-
-
 
         public DeviceSerial()
         {
@@ -49,19 +38,30 @@ namespace SerialMonitor
                     Values= new ChartValues<double>{10,9,8,7,6,5,4,3,2,1}
                 }
             };
+            Connect(3);
+            //System.Threading.Thread.Sleep(100);
 
-            dispatcher.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcher.Interval=new TimeSpan(0, 0, 0, 0, 10);
-            dispatcher.Start();
+            //dispatcher.Tick += new EventHandler(dispatcherTimer_Tick);
+            //dispatcher.Interval=new TimeSpan(0, 0, 0, 0, 10);
+            //dispatcher.Start();
 
 
         }
 
         private void dispatcherTimer_Tick(object? sender, EventArgs e)
         {
-            count++;
-            TestData=count.ToString();
-            OnPropertyChanged(ReceiveData);
+            if (serialPort.IsOpen)
+            {
+                string temp = serialPort.ReadLine();
+
+                if (String.IsNullOrEmpty(temp) == false)
+                {
+                    temp = temp.Trim().ToString();
+                    ReceiveData = Convert.ToInt16(temp).ToString();
+
+                    Debug.WriteLine(ReceiveData);
+                }
+            }
         }
 
         public bool Connect(int portName, int baudRate = (int)9600, int DataBits=(int)8, Parity parity=Parity.None, StopBits stopBits=StopBits.One)
@@ -77,7 +77,7 @@ namespace SerialMonitor
 
                 serialPort.Open();
                 serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceiveHandler);
-
+                
             }
 
 
@@ -87,14 +87,18 @@ namespace SerialMonitor
         private void DataReceiveHandler(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort serialPort = (SerialPort)sender;
-            
             string temp= serialPort.ReadLine();
 
-            ReceiveData = temp.Trim().ToString();
-            var values = Convert.ToDouble(ReceiveData);
-            Debug.WriteLine(ReceiveData);
+            if (String.IsNullOrEmpty(temp) == false)
+            {
+                ReceiveData = temp.Trim().ToString();
+                var values = Convert.ToDouble(ReceiveData);
+                Debug.WriteLine(ReceiveData);
+            }
+   
 
             //SeriesCollection[0].Values.Add(values);
+
         }
 
         public bool Close()
@@ -102,6 +106,7 @@ namespace SerialMonitor
             serialPort.DataReceived -= new SerialDataReceivedEventHandler(DataReceiveHandler);
 
             serialPort.Close();
+
             return true;
         }
 

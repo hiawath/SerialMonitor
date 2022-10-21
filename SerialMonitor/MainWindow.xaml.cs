@@ -11,38 +11,31 @@ namespace SerialMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
-        DeviceSerial arduinoSerial;
+        //DeviceSerial arduinoSerial;
 
 
-        DispatcherTimer dispatcher=new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
-            arduinoSerial = new DeviceSerial();
+            //arduinoSerial = new DeviceSerial();
 
-            dispatcher.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcher.Interval=new TimeSpan(0, 0, 0,0,100);
-            dispatcher.Start();
-
+  
             
 
         }
 
-        private void dispatcherTimer_Tick(object? sender, EventArgs e)
-        {
-            
-        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            arduinoSerial.Connect(7);
-            dispatcher.Start();
+           // arduinoSerial.Connect(3);
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            arduinoSerial.Close();
-            dispatcher.Stop();
+            //arduinoSerial.Close();
+
         }
 
         private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
