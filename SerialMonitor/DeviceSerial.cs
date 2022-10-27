@@ -5,6 +5,7 @@ using LiveCharts.Wpf;
 using System;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Threading;
 using System.Windows.Threading;
 
 namespace SerialMonitor
@@ -12,7 +13,6 @@ namespace SerialMonitor
     partial class DeviceSerial : ObservableObject
     {
 
-        DispatcherTimer dispatcher = new DispatcherTimer();
         public SeriesCollection SeriesCollection { get; set; }
         SerialPort serialPort = new SerialPort();
 
@@ -38,7 +38,8 @@ namespace SerialMonitor
                     Values= new ChartValues<double>{10,9,8,7,6,5,4,3,2,1}
                 }
             };
-            Connect(3);
+            Thread.Sleep(500);
+            Connect(1);
             //System.Threading.Thread.Sleep(100);
 
             //dispatcher.Tick += new EventHandler(dispatcherTimer_Tick);
@@ -48,21 +49,6 @@ namespace SerialMonitor
 
         }
 
-        private void dispatcherTimer_Tick(object? sender, EventArgs e)
-        {
-            if (serialPort.IsOpen)
-            {
-                string temp = serialPort.ReadLine();
-
-                if (String.IsNullOrEmpty(temp) == false)
-                {
-                    temp = temp.Trim().ToString();
-                    ReceiveData = Convert.ToInt16(temp).ToString();
-
-                    Debug.WriteLine(ReceiveData);
-                }
-            }
-        }
 
         public bool Connect(int portName, int baudRate = (int)9600, int DataBits=(int)8, Parity parity=Parity.None, StopBits stopBits=StopBits.One)
         {
@@ -92,8 +78,8 @@ namespace SerialMonitor
             if (String.IsNullOrEmpty(temp) == false)
             {
                 ReceiveData = temp.Trim().ToString();
-                var values = Convert.ToDouble(ReceiveData);
-                Debug.WriteLine(ReceiveData);
+                //var values = Convert.ToDouble(ReceiveData);
+                //Debug.WriteLine(ReceiveData);
             }
    
 

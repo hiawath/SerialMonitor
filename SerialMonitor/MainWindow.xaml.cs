@@ -24,23 +24,5 @@ namespace SerialMonitor
 
         }
 
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-           // arduinoSerial.Connect(3);
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //arduinoSerial.Close();
-
-        }
-
-        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }
