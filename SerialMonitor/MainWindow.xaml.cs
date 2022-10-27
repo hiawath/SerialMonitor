@@ -17,11 +17,6 @@ namespace SerialMonitor
         public MainWindow()
         {
             InitializeComponent();
-            //arduinoSerial = new DeviceSerial();
-
-  
-            
-
         }
 
     }

@@ -13,24 +13,32 @@
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="400"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0">
-            <TextBlock  Text="{Binding TestData}" FontSize="20"/>
+        <Grid Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock  Text="{Binding ReceiveData, Mode=OneWay}" FontSize="50" Margin="153,7,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
         </Grid>
 
 
         <Grid Grid.Row="1" Grid.Column="0" >
-            <TextBlock  Text="{Binding ReceiveData, Mode=OneWay}" FontSize="50" Margin="153,7,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            
+            <Button Content="OPEN" 
+                    Command="{Binding OpenButtonCommand}"
+                    HorizontalAlignment="Left" Height="61" 
+                    Margin="2,13,0,0" VerticalAlignment="Top" Width="146" />
 
-            <Button Content="OPEN" HorizontalAlignment="Left" Height="61" Margin="108,0,0,0" VerticalAlignment="Center" Width="146" />
-            <Button Content="CLOSE" HorizontalAlignment="Left" Height="62" Margin="108,145,0,0" VerticalAlignment="Top" Width="146" />
+            <Button Content="CLOSE" 
+                    Command="{Binding CloseButtonCommand}"
+                    
+                    HorizontalAlignment="Left" Height="62" Margin="153,12,0,0" VerticalAlignment="Top" Width="146" />
 
         </Grid>
 

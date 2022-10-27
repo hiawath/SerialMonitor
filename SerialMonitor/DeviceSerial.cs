@@ -1,11 +1,13 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace SerialMonitor
@@ -23,6 +25,10 @@ namespace SerialMonitor
             set => SetProperty(ref receiveData, value);
         }
 
+        public RelayCommand OpenButtonCommand { get; }
+        public RelayCommand CloseButtonCommand { get; }
+
+        
         public DeviceSerial()
         {
             SeriesCollection = new SeriesCollection
@@ -39,16 +45,20 @@ namespace SerialMonitor
                 }
             };
             Thread.Sleep(500);
-            Connect(1);
-            //System.Threading.Thread.Sleep(100);
+            //Connect(1);
 
-            //dispatcher.Tick += new EventHandler(dispatcherTimer_Tick);
-            //dispatcher.Interval=new TimeSpan(0, 0, 0, 0, 10);
-            //dispatcher.Start();
-
-
+            OpenButtonCommand = new RelayCommand(ConnectButton);
+            CloseButtonCommand = new RelayCommand(CloseButton);
         }
 
+        private void ConnectButton()
+        {
+            Connect(8);
+        }
+        private void CloseButton()
+        {
+            Close();
+        }
 
         public bool Connect(int portName, int baudRate = (int)9600, int DataBits=(int)8, Parity parity=Parity.None, StopBits stopBits=StopBits.One)
         {
@@ -78,12 +88,13 @@ namespace SerialMonitor
             if (String.IsNullOrEmpty(temp) == false)
             {
                 ReceiveData = temp.Trim().ToString();
-                //var values = Convert.ToDouble(ReceiveData);
+                var values = Convert.ToDouble(ReceiveData);
+                SeriesCollection[0].Values.Add(values);
                 //Debug.WriteLine(ReceiveData);
             }
-   
 
-            //SeriesCollection[0].Values.Add(values);
+
+
 
         }
 
