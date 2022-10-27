@@ -12,52 +12,16 @@ using System.Windows.Threading;
 
 namespace SerialMonitor
 {
-    partial class DeviceSerial : ObservableObject
+    partial class DeviceSerial 
     {
 
-        public SeriesCollection SeriesCollection { get; set; }
-        SerialPort serialPort = new SerialPort();
+        public event EventHandler DataEvent;
+        public string ReceiveData { get; private set; }
 
-        private string receiveData="";
-        public string ReceiveData
-        {
-            get => receiveData;
-            set => SetProperty(ref receiveData, value);
-        }
-
-        public RelayCommand OpenButtonCommand { get; }
-        public RelayCommand CloseButtonCommand { get; }
-
-        
+        readonly SerialPort serialPort = new SerialPort();
         public DeviceSerial()
         {
-            SeriesCollection = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title ="Series 1",
-                    Values = new ChartValues<double> { 1,2,3,4,5}
-                },
-                new LineSeries
-                {
-                    Title="Series 2",
-                    Values= new ChartValues<double>{10,9,8,7,6,5,4,3,2,1}
-                }
-            };
-            Thread.Sleep(500);
-            //Connect(1);
-
-            OpenButtonCommand = new RelayCommand(ConnectButton);
-            CloseButtonCommand = new RelayCommand(CloseButton);
-        }
-
-        private void ConnectButton()
-        {
-            Connect(8);
-        }
-        private void CloseButton()
-        {
-            Close();
+            
         }
 
         public bool Connect(int portName, int baudRate = (int)9600, int DataBits=(int)8, Parity parity=Parity.None, StopBits stopBits=StopBits.One)
@@ -88,14 +52,9 @@ namespace SerialMonitor
             if (String.IsNullOrEmpty(temp) == false)
             {
                 ReceiveData = temp.Trim().ToString();
-                var values = Convert.ToDouble(ReceiveData);
-                SeriesCollection[0].Values.Add(values);
-                //Debug.WriteLine(ReceiveData);
+                Debug.WriteLine(ReceiveData);
+                DataEvent(this, EventArgs.Empty);
             }
-
-
-
-
         }
 
         public bool Close()
