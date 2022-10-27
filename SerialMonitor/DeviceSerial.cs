@@ -12,7 +12,7 @@ using System.Windows.Threading;
 
 namespace SerialMonitor
 {
-    partial class DeviceSerial 
+    partial class DeviceSerial : IDeviceSerial
     {
 
         public event EventHandler DataEvent;
@@ -21,10 +21,10 @@ namespace SerialMonitor
         readonly SerialPort serialPort = new SerialPort();
         public DeviceSerial()
         {
-            
+
         }
 
-        public bool Connect(int portName, int baudRate = (int)9600, int DataBits=(int)8, Parity parity=Parity.None, StopBits stopBits=StopBits.One)
+        public bool Connect(int portName, int baudRate = (int)9600, int DataBits = (int)8, Parity parity = Parity.None, StopBits stopBits = StopBits.One)
         {
             if (serialPort.IsOpen==false)
             {
@@ -37,17 +37,16 @@ namespace SerialMonitor
 
                 serialPort.Open();
                 serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceiveHandler);
-                
+
             }
 
 
             return true;
         }
-
         private void DataReceiveHandler(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort serialPort = (SerialPort)sender;
-            string temp= serialPort.ReadLine();
+            string temp = serialPort.ReadLine();
 
             if (String.IsNullOrEmpty(temp) == false)
             {
@@ -56,7 +55,6 @@ namespace SerialMonitor
                 DataEvent(this, EventArgs.Empty);
             }
         }
-
         public bool Close()
         {
             serialPort.DataReceived -= new SerialDataReceivedEventHandler(DataReceiveHandler);
@@ -65,6 +63,5 @@ namespace SerialMonitor
 
             return true;
         }
-
     }
 }

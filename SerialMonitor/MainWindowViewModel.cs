@@ -15,7 +15,7 @@ namespace SerialMonitor
     {
         public SeriesCollection SeriesCollection { get; set; }
 
-        readonly DeviceSerial deviceSerial=new DeviceSerial();
+        readonly IDeviceSerial deviceSerial = new DummySerial();//();DeviceSerial
 
         private string receiveData = "";
         public string ReceiveData
@@ -52,7 +52,7 @@ namespace SerialMonitor
 
         private void DataReceived(object? sender, EventArgs e)
         {
-            var temp = (DeviceSerial)sender;
+            var temp = (IDeviceSerial)sender;
             ReceiveData=temp.ReceiveData;
 
             var values = Convert.ToDouble(ReceiveData);
